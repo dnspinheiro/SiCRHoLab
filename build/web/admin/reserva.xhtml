@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>SICRHOLAB - Menu de Reservas</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="/template.xhtml">
+
+            <ui:define name="titulo_pagina">Menu Reserva</ui:define>
+
+            <ui:define name="form_manutencao">
+
+                <h:form></h:form>
+
+                <h:form id="tabela">
+                    <p:dataTable id="dataTable" var="r" value="#{reservaMB.reservas}" paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15,20,25">
+                        <f:facet name="header">  
+                            <h:outputText value="Todas as Reservas" /> 
+                        </f:facet>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Código da Reserva" />
+                            </f:facet>
+                            <p:commandLink value="#{r.codigoReserva}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Data/Hora da Reserva" />   
+                            </f:facet>
+                            <p:commandLink value="#{reservaMB.retornaDataHoraAtual(r)}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Inicio Do Evento" />   
+                            </f:facet>   
+                            <p:commandLink value="#{reservaMB.retornaDataHoraInicio(r)}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Fim do Evento" />
+                            </f:facet>   
+                            <p:commandLink value="#{reservaMB.retornaDataHoraFim(r)}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Periodicidade" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.periodicidade}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Status" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.status}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Sala" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.sala.nomeSala}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Usuário" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.usuario.matricula}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Turma" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.turma.numero_turma}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Categoria de Evento" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.categoriaEvento.descricao}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Descrição" />
+                            </f:facet>   
+                            <p:commandLink value="#{r.descricao}" update=":formulario">
+                                <f:setPropertyActionListener value="#{r}" target="#{reservaMB.reserva}"/> 
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <hr></hr>
+
+                <h:form id="formulario">
+                    <p:panel id="formPanel" header="Manutenção das Reservas">
+                        <h:inputHidden value="#{reservaMB.reserva.codigoReserva}"/>
+                        <h:panelGrid columns="3">
+
+                            <h:outputLabel value="Data do Inicio do Evento:*"/>
+                            <p:calendar id="dataHoraInicio" value="#{reservaMB.inicioEvento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Campo Obrigatório" />
+                            <p:message for="dataHoraInicio" />
+
+                            <h:outputLabel value="Hora do Inicio do Evento:*" />
+                            <h:selectOneMenu id="horaInicio" requiredMessage="Campo Obrigatório" value="#{reservaMB.horaInicio}" required="true">
+                                <f:selectItem itemValue="" itemLabel="Selecione o Horário"/>
+                                <f:selectItem itemValue="7:00" itemLabel="7:00"/>
+                                <f:selectItem itemValue="7:50" itemLabel="7:50"/>
+                                <f:selectItem itemValue="8:55" itemLabel="8:55"/>
+                                <f:selectItem itemValue="9:45" itemLabel="9:45"/>
+                                <f:selectItem itemValue="10:50" itemLabel="10:50"/>
+                                <f:selectItem itemValue="11:40" itemLabel="11:40"/>
+                                <f:selectItem itemValue="13:00" itemLabel="13:00"/>
+                                <f:selectItem itemValue="13:50" itemLabel="13:50"/>
+                                <f:selectItem itemValue="14:55" itemLabel="14:55"/>
+                                <f:selectItem itemValue="15:45" itemLabel="15:45"/>
+                                <f:selectItem itemValue="16:50" itemLabel="16:50"/>
+                                <f:selectItem itemValue="17:40" itemLabel="17:40"/>
+                                <f:selectItem itemValue="18:45" itemLabel="18:45"/>
+                                <f:selectItem itemValue="19:35" itemLabel="19:35"/>
+                                <f:selectItem itemValue="20:35" itemLabel="20:35"/>
+                                <f:selectItem itemValue="21:25" itemLabel="21:25"/>
+                            </h:selectOneMenu><p:message for="horaInicio" />
+
+                            <h:outputLabel value="Data do Fim do Evento:*"/>
+                            <p:calendar id="dataHoraFim" value="#{reservaMB.fimEvento}" pattern="dd/MM/yyyy" required="true" requiredMessage="Campo Obrigatório" />
+                            <p:message for="dataHoraFim" />
+
+                            <h:outputLabel value="Hora do Fim do Evento:*" />
+                            <h:selectOneMenu id="horaFim" requiredMessage="Campo Obrigatório" value="#{reservaMB.horaFim}" required="true">
+                                <f:selectItem itemValue="" itemLabel="Selecione o Horário"/>
+                                <f:selectItem itemValue="7:50" itemLabel="7:50"/>
+                                <f:selectItem itemValue="8:40" itemLabel="8:40"/>
+                                <f:selectItem itemValue="9:45" itemLabel="9:45"/>
+                                <f:selectItem itemValue="10:35" itemLabel="10:35"/>
+                                <f:selectItem itemValue="11:40" itemLabel="11:40"/>
+                                <f:selectItem itemValue="12:30" itemLabel="12:30"/>
+                                <f:selectItem itemValue="13:50" itemLabel="13:50"/>
+                                <f:selectItem itemValue="14:40" itemLabel="14:40"/>
+                                <f:selectItem itemValue="15:45" itemLabel="15:45"/>
+                                <f:selectItem itemValue="16:35" itemLabel="16:35"/>
+                                <f:selectItem itemValue="17:40" itemLabel="17:40"/>
+                                <f:selectItem itemValue="18:30" itemLabel="18:30"/>
+                                <f:selectItem itemValue="19:35" itemLabel="19:35"/>
+                                <f:selectItem itemValue="20:25" itemLabel="20:25"/>
+                                <f:selectItem itemValue="21:25" itemLabel="21:25"/>
+                                <f:selectItem itemValue="22:15" itemLabel="22:15"/>
+                            </h:selectOneMenu><p:message for="horaFim" />
+
+                            <h:outputLabel value="Periodicidade:*" />
+                            <h:selectOneMenu id="periodicidade" requiredMessage="Campo Obrigatório" value="#{reservaMB.reserva.periodicidade}" required="true">
+                                <f:selectItem itemValue="" itemLabel="Selecione a Periodicidade"/>
+                                <f:selectItem itemValue="Diário" itemLabel="Diário"/>
+                                <f:selectItem itemValue="Semanal" itemLabel="Semanal"/>
+                                <f:selectItem itemValue="Semestral" itemLabel="Semestral"/>
+                            </h:selectOneMenu><p:message for="periodicidade" />
+
+                            <h:outputLabel value="Status:*" />
+                            <h:selectOneMenu id="status" disabled="false" requiredMessage="Campo Obrigatório" value="#{reservaMB.reserva.status}" required="true">
+                                <f:selectItem itemValue="Reserva Pendente" itemLabel="Reserva Pendente"/>
+                                <f:selectItem itemValue="Reserva Autorizada" itemLabel="Reserva Autorizada"/>
+                                <f:selectItem itemValue="Reserva Não Autorizada" itemLabel="Reserva Não Autorizada"/>
+                            </h:selectOneMenu><p:message for="status" />
+
+                            <h:outputLabel value="Sala:*" />
+                            <h:selectOneMenu id="sala" requiredMessage="Campo Obrigatório" value="#{reservaMB.sala.codigoSala}" required="true">
+                                <f:selectItem itemLabel="Selecione a Sala" itemValue="" />
+                                <f:selectItems var="s" value="#{reservaMB.listaSalas()}" itemValue="#{s.codigoSala}" itemLabel="#{s.nomeSala}"/>  
+                            </h:selectOneMenu><p:message for="sala" />
+
+                            <h:outputLabel value="Usuário:*" />
+                            <h:selectOneMenu id="usuario" requiredMessage="Campo Obrigatório" value="#{reservaMB.usuario.matricula}" required="true">
+                                <f:selectItem itemLabel="Selecione o Usuário" itemValue="" />  
+                                <f:selectItems var="u" value="#{reservaMB.listaUsuarios()}" itemValue="#{u.matricula}" itemLabel="#{u.matricula}"/>  
+                            </h:selectOneMenu><p:message for="usuario" />
+
+                            <h:outputLabel value="Turma:" />
+                            <h:selectOneMenu id="turma" value="#{reservaMB.turma.cod_turma}">
+                                <f:selectItem itemLabel="Selecione a Turma" itemValue="" />  
+                                <f:selectItems var="t" value="#{reservaMB.listaTurmas()}" itemValue="#{t.cod_turma}" itemLabel="#{t.numero_turma}"/>  
+                            </h:selectOneMenu><p:message for="turma" />
+
+                            <h:outputLabel value="Categoria de Evento:*" />
+                            <h:selectOneMenu id="categoriaEvento" requiredMessage="Campo Obrigatório" value="#{reservaMB.categoriaDeEvento.codCatEvento}" required="true">
+                                <f:selectItem itemLabel="Selecione a Categoria de Evento" itemValue="" />  
+                                <f:selectItems var="c" value="#{reservaMB.listaCategoriaDeEventos()}" itemValue="#{c.codCatEvento}" itemLabel="#{c.descricao}"/>  
+                            </h:selectOneMenu><p:message for="sala" />
+
+                            <h:outputLabel value="Descrição:*" />
+                            <p:inputTextarea id="descricao" value="#{reservaMB.reserva.descricao}" required="true" requiredMessage="Campo Obrigatório"/>
+                            <p:message for="descricao" />
+
+                        </h:panelGrid>
+                        <p:commandButton value="Cadastrar" action="#{reservaMB.inserirReserva()}" update=":tabela, formulario"/>
+                        <p:commandButton value="Alterar" action="#{reservaMB.alterarReserva()}" update=":tabela, formulario"/>
+                        <p:commandButton value="Excluir" action="#{reservaMB.excluirReserva()}" update=":tabela, formulario"/><br/><br/>
+                        <b><h:outputText value="#{reservaMB.mensagem}" style="font: bolder"/></b>
+                    </p:panel>
+                </h:form>
+
+                <hr></hr>
+
+                <h:form id="formPesquisa">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar por Status, Código da Turma ou Descrição">
+                        <h:panelGrid columns="3">
+                            <p:inputText id="pesquisaReserva" style="text-transform: lowercase" maxlength="60" value ="#{reservaMB.reservaPesquisada}" required="true" requiredMessage="Campo Obrigatório"/><p:message for="pesquisaReserva"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Pesquisar" action="#{reservaMB.pesquisarPorReserva()}" update="formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+                
+                <hr></hr>
+                
+                <h:form id="formPesquisaTodos">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Todas as Reservas">
+                        <p:commandButton value="Pesquisar Todas" action="#{reservaMB.pesquisar()}" update=":formPesquisa, :tabela, :formulario"/>
+                    </p:panel>   
+                </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>

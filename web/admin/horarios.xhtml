@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>SICRHOLAB - Tabela de horários</title>
+    </h:head>
+    <h:body>
+        
+        <ui:composition template="../template.xhtml">
+
+            <ui:define name="titulo_pagina">Exibir Horários</ui:define>
+
+            <ui:define name="form_manutencao">
+
+                <h:form></h:form>
+        
+        <h:form id="tabela">
+            <p:dataTable id="dataTable"  var="s" value="#{horarioMB.result}" paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15,20,25">
+                        <f:facet name="header">  
+                            <h:outputText value="Horarios" /> 
+                        </f:facet>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Inicio" />   
+                            </f:facet>
+                            <p:commandLink value="#{reservaMB.retornaDataHoraInicio(s)}">
+                                <f:setPropertyActionListener value="#{s}" target="#{horarioMB.reserva.dataHoraInicioEvento}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Fim" />   
+                            </f:facet>   
+                            <p:commandLink value="#{reservaMB.retornaDataHoraFim(s)}">
+                                <f:setPropertyActionListener value="#{s}" target="#{horarioMB.reserva.dataHoraFimEvento}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Descrição" />   
+                            </f:facet>   
+                            <p:commandLink value="#{s.descricao}">
+                                <f:setPropertyActionListener value="#{s}" target="#{horarioMB.reserva.descricao}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Periodicidade" />   
+                            </f:facet>   
+                            <p:commandLink value="#{s.periodicidade}">
+                                <f:setPropertyActionListener value="#{s}" target="#{horarioMB.reserva.periodicidade}"/> 
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <hr></hr>
+         </ui:define>
+        </ui:composition>
+    </h:body> 
+</html>

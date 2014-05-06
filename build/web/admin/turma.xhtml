@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>SICRHOLAB - Menu de Turmas</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../template.xhtml">
+
+            <ui:define name="titulo_pagina">Menu Turma</ui:define>
+
+            <ui:define name="form_manutencao">
+
+                <h:form></h:form>
+                
+                <h:form id="tabela">
+                    <p:dataTable id="dataTable" var="s" value="#{turmaMB.turmas}" paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15,20,25">
+                        <f:facet name="header">  
+                            <h:outputText value="Todas as Turmas" /> 
+                        </f:facet>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Código da Turma" />
+                            </f:facet>
+                            <p:commandLink value="#{s.cod_turma}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{turmaMB.turma}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Ano Letivo" />   
+                            </f:facet>
+                            <p:commandLink value="#{s.ano_letivo}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{turmaMB.turma}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Número da Turma" />   
+                            </f:facet>   
+                            <p:commandLink value="#{s.numero_turma}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{turmaMB.turma}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Usuário" />
+                            </f:facet>   
+                            <p:commandLink value="#{s.usuario.nome}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{turmaMB.turma.usuario}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Disciplina" />
+                            </f:facet>   
+                            <p:commandLink value="#{s.disciplina.nome}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{turmaMB.turma.disciplina}"/> 
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <hr></hr>
+
+                <!--Formulario do crud-->
+
+                <h:form id="formulario">
+                    <p:panel id="formPanel" header="Manutenção das Turmas">
+                        <h:inputHidden value="#{turmaMB.turma.cod_turma}"/>
+                        <h:panelGrid columns="3">
+                            <h:outputLabel for="ano_letivo" value="Ano Letivo:*" />
+                            <p:inputMask mask="9999" id="ano_letivo" value="#{turmaMB.turma.ano_letivo}" required="true" requiredMessage="Campo Obrigatório" label="Ano Letivo"/>
+                            <p:message for="ano_letivo" />
+                            <h:outputLabel for="numero" value="Número da Turma:*"/>
+                            <p:inputText id="numero" value="#{turmaMB.turma.numero_turma}" required="true" requiredMessage="Campo Obrigatório" label="Número da Turma"/>
+                            <p:message for="numero"/>
+                            
+                            <h:outputLabel for="usuario" value="Usuário: *"/>
+                            <h:selectOneMenu id="usuario" requiredMessage="Campo Obrigatório"  value="#{turmaMB.usuario.matricula}" required="true">
+                                <f:selectItem itemLabel="Selecione o usuário" itemValue="" />  
+                                <f:selectItems  var="c"  value="#{turmaMB.listaUsuarios()}" itemValue="#{c.matricula}" itemLabel="#{c.nome}"/>  
+                            </h:selectOneMenu> 
+                            <p:message for="usuario"/>
+                            <h:outputLabel for="disciplina" value="Disciplina: *"/>
+                            <h:selectOneMenu id="disciplina" requiredMessage="Campo Obrigatório"  value="#{turmaMB.disciplina.cod_disciplina}" required="true">
+                                <f:selectItem itemLabel="Selecione a disciplina" itemValue="" />  
+                                <f:selectItems var="c"  value="#{turmaMB.listaDisciplinas()}" itemValue="#{c.cod_disciplina}" itemLabel="#{c.nome}"/>  
+                            </h:selectOneMenu> 
+                            <p:message for="disciplina"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Cadastrar" action="#{turmaMB.inserirTurma()}" update=":formPesquisa, :tabela, formulario"/>
+                        <p:commandButton value="Alterar" action="#{turmaMB.alterarTurma()}" update=":formPesquisa, :tabela, formulario"/>
+                        <p:commandButton value="Excluir" action="#{turmaMB.excluirTurma()}" update=":formPesquisa, :tabela, formulario"/><br/><br/>
+                        <b><h:outputText value="#{turmaMB.mensagem}" style="font: bolder"/></b>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                
+                 <!--Formulario de pesquisa-->
+
+                <h:form id="formPesquisa">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar por Ano Letivo">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Ano Letivo:*"/>
+                            <p:inputMask mask="9999" id="ano" value ="#{turmaMB.anoLetivo}" required="true" requiredMessage="Campo Obrigatório" label="Ano Letivo"/>
+                            <p:message for="ano"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Pesquisar" action="#{turmaMB.pesquisarTurmaPorAno()}" update="formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                <h:form id="formPesquisaPorNumero">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar por Número da Turma">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Número da Turma:*"/>
+                            <p:inputMask mask="9999" id="numeroT" value ="#{turmaMB.numeroTurma}" required="true" requiredMessage="Campo Obrigatório" label="Nome do Curso"/>
+                            <p:message for="numeroT"/>
+                            <p:commandButton value="Pesquisar" action="#{turmaMB.pesquisarTurmaPorNumero()}" update=":formPesquisa, :tabela, :formulario"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                <h:form id="formPesquisaTodos">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Todas as Turmas">
+                        <p:commandButton value="Pesquisar Todas" action="#{turmaMB.pesquisar()}" update=":formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>

@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>SICRHOLAB - Menu Disciplinas</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../template.xhtml">
+
+            <ui:define name="titulo_pagina">Menu Disciplina</ui:define>
+
+            <ui:define name="form_manutencao">
+
+                <h:form></h:form>
+                
+                <h:form id="tabela">
+                    <p:dataTable id="dataTable" var="s" value="#{disciplinaMB.disciplinas}" paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15,20,25">
+                        <f:facet name="header">  
+                            <h:outputText value="Todas as Disciplinas" /> 
+                        </f:facet>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Código da Disciplina" />
+                            </f:facet>
+                            <p:commandLink value="#{s.cod_disciplina}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{disciplinaMB.disciplina}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Nome da Disciplina" />   
+                            </f:facet>
+                            <p:commandLink value="#{s.nome}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{disciplinaMB.disciplina}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Carga Horária" />   
+                            </f:facet>   
+                            <p:commandLink value="#{s.carga_horaria}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{disciplinaMB.disciplina}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Curso" />   
+                            </f:facet>   
+                            <p:commandLink value="#{s.curso}" update=":formulario">
+                                <f:setPropertyActionListener value="#{s}" target="#{disciplinaMB.disciplina}"/> 
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <hr></hr>
+
+                <!--Formulario do crud-->
+
+                <h:form id="formulario">
+                    <p:panel id="formPanel" header="Manutenção das Disciplinas">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel for="cod_disciplina" value="Código da Disciplina:*" />  
+                            <p:inputMask mask="aaa9999" style="text-transform: uppercase" id="cod_disciplina" value="#{disciplinaMB.disciplina.cod_disciplina}" maxlength="7" required="true" requiredMessage="Campo Obrigatório" label="Código da Disciplina"/>
+                            <p:message for="cod_disciplina" />
+                            <h:outputLabel value="Nome da Disciplina:*"/>
+                            <p:inputText id="nome" maxlength="30" value="#{disciplinaMB.disciplina.nome}" required="true" requiredMessage="Campo Obrigatório" label="Nome da Disciplina"/>
+                            <p:message for="nome"/>
+                            <h:outputLabel value="Carga Horária:*"/>
+                            <p:inputText id="carga_horaria" maxlength="5" value ="#{disciplinaMB.disciplina.carga_horaria}" required="true" requiredMessage="Campo Obrigatório" label="Carga Horária da Disciplina"/>
+                            <p:message for="carga_horaria"/>
+                            <h:outputLabel value="Curso:*"/>
+                            <p:inputText id="curso" maxlength="200" value="#{disciplinaMB.disciplina.curso}" required="true" requiredMessage="Campo Obrigatório" label="Curso">
+                                <!--<f:validateRegex for="curso" pattern="[a-zA-Z]*" />-->
+                            </p:inputText>
+                            <p:message for="curso"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Cadastrar" action="#{disciplinaMB.inserirDisciplina()}" update=":formPesquisa, :tabela, formulario"/>
+                        <p:commandButton value="Alterar" action="#{disciplinaMB.alterarDisciplina()}" update=":formPesquisa, :tabela, formulario"/>
+                        <p:commandButton value="Excluir" action="#{disciplinaMB.excluirDisciplina()}" update=":formPesquisa, :tabela, formulario"/><br/><br/>
+                        <b><h:outputText value="#{disciplinaMB.mensagem}" style="font: bolder"/></b>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                
+                 <!--Formulario de pesquisa-->
+
+                <h:form id="formPesquisa">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Disciplinas por Nome">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Nome da Disciplina:*"/>
+                            <p:inputText id="nome" style="text-transform: lowercase" maxlength="30" value ="#{disciplinaMB.nome_disciplina}" required="true" requiredMessage="Campo Obrigatório" label="Nome da Disciplina"/>
+                            <p:message for="nome"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Pesquisar" action="#{disciplinaMB.pesquisarPorNomeDaDisciplina()}" update="formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                <h:form id="formPesquisaPorCurso">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Disciplinas por Curso">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Nome do Curso:*"/>
+                            <p:inputText id="curso" maxlength="30" value ="#{disciplinaMB.curso_disciplina}" required="true" requiredMessage="Campo Obrigatório" label="Nome do Curso"/>
+                            <p:message for="curso"/>
+                            <p:commandButton value="Pesquisar" action="#{disciplinaMB.pesquisarDisciplinaPorCurso()}" update=":formPesquisa, :tabela, :formulario"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                <h:form id="formPesquisaTodos">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Todas as Disciplinas">
+                        <p:commandButton value="Pesquisar Todas" action="#{disciplinaMB.pesquisar()}" update=":formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>SICRHOLAB - Consultar Reserva</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../template.xhtml">
+
+            <ui:define name="titulo_pagina">Consultar reservas</ui:define>
+
+            <ui:define name="form_manutencao">
+
+                <h:form></h:form>
+                
+               <h:form id="form">  
+                  
+    <p:panel header="Selecione" style="margin-bottom:10px;">  
+        <h:panelGrid columns="2" cellpadding="5">  
+            <p:selectOneMenu  value="#{horarioMB.sala.codigoSala}">    
+                <f:selectItem itemLabel="Selecione a sala" itemValue="" />  
+                <f:selectItems value="#{horarioMB.buscarSalas()}" var="e" itemValue="#{e.codigoSala}" itemLabel="#{e.nomeSala}" />  
+                <p:ajax update="cidades"   
+                        listener="#{horarioMB.buscarReservas()}" />  
+            </p:selectOneMenu><br/>
+            
+            <p:selectOneMenu rendered="false" id="cidades" value="#{horarioMB.reserva}">  
+                <f:selectItem itemLabel="Selecione o horário" itemValue="" />  
+                <f:selectItems value="#{horarioMB.buscarReservas()}" var="c" itemLabel="#{c.descricao}" />  
+            </p:selectOneMenu>  
+        </h:panelGrid>
+                   
+                <p:commandButton value="Consultar" action="#{horarioMB.listarHorarios()}"/> 
+        </p:panel>
+               </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>
+
+
+

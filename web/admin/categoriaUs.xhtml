@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>SICRHOLAB - Menu Categorias de Usuário</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../template.xhtml">
+
+            <ui:define name="titulo_pagina">Menu Categorias de Usuário</ui:define>
+            
+            <ui:define name="form_manutencao">
+                
+                <h:form></h:form>
+                
+                <h:form id="tabela">
+                    <p:dataTable id="dataTable" var="u" value="#{categoriaUsuarioMB.categorias}" paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15,20,25">
+                        <f:facet name="header">  
+                            <h:outputText value="Categorias Cadastradas" /> 
+                        </f:facet>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="ID" />
+                            </f:facet>
+                            <p:commandLink value="#{u.codCatUser}" update=":formulario">
+                                <f:setPropertyActionListener value="#{u}" target="#{categoriaUsuarioMB.categoriaUsuario}"/>  
+                            </p:commandLink>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Prioridade" />
+                            </f:facet>
+                            <p:commandLink value="#{u.prioridade}" update=":formulario">
+                                <f:setPropertyActionListener value="#{u}" target="#{categoriaUsuarioMB.categoriaUsuario}"/>  
+                            </p:commandLink>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Descrição" />
+                            </f:facet>
+                            <p:commandLink value="#{u.descricao}" update=":formulario">
+                                <f:setPropertyActionListener value="#{u}" target="#{categoriaUsuarioMB.categoriaUsuario}"/>  
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                
+                <hr></hr>
+                
+                <h:form id="formulario"> 
+                    <p:panel id="panel" header="Cadastro de Categoria">    
+                        <h:inputHidden value="#{categoriaUsuarioMB.categoriaUsuario.codCatUser}"/>
+                        <h:panelGrid columns="3">
+
+                            <h:outputLabel for="prioridade" value="Prioridade: *" />  
+                            <p:inputText id="prioridade" 
+                                         value="#{categoriaUsuarioMB.categoriaUsuario.prioridade}" maxlength="30"  requiredMessage="Campo Obrigatório" required="true" label="Prioridade"/>  
+                            <p:message for="prioridade" />
+
+                            <h:outputLabel for="descricao" value="Nome: *" />  
+                            <p:inputText id="descricao" value="#{categoriaUsuarioMB.categoriaUsuario.descricao}" maxlength="60" required="true" requiredMessage="Campo Obrigatório" label="Descrição"/>  
+                            <p:message for="descricao"/>     
+                        </h:panelGrid>
+                        <p:commandButton  value="Inserir" update="formulario, :tabela" action="#{categoriaUsuarioMB.inserirCategoriaUsuario()}"/>
+                        <p:commandButton value="Alterar" update="formulario, :tabela" action="#{categoriaUsuarioMB.alterarCategoriaUsuario()}"/>
+                        <p:commandButton value="Excluir" update="formulario, :tabela" action="#{categoriaUsuarioMB.excluirCategoriaUsuario()}"/><br/><br/>
+                        <b><h:outputText value="#{categoriaUsuarioMB.mensagem}" style="font: bolder"/></b>
+                    </p:panel>
+                </h:form>
+                
+                <hr></hr>
+                
+                <!--Formulario de pesquisa--> 
+                
+                <h:form id="formPesquisa">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Categoria de Usuário">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value=""/>
+                            <p:inputText id="nomeDaCategoria" style="text-transform: lowercase" maxlength="30" value ="#{categoriaUsuarioMB.categoriaPesquisada}" required="true" requiredMessage="Campo Obrigatório"/><p:message for="nomeDaCategoria"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Pesquisar" action="#{categoriaUsuarioMB.pesquisarPorCategoria()}" update=":formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+                
+                <hr></hr>
+                
+                <h:form id="formPesquisaTodos">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Todas as categorias">
+                        <p:commandButton value="Pesquisar Todos" action="#{categoriaUsuarioMB.pesquisar()}" update=":formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>  
+
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body>
+</html>

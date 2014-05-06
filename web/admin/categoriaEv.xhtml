@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>SICRHOLAB - Menu de Categoria de Eventos</title>
+    </h:head>
+    <h:body>
+
+        <ui:composition template="../template.xhtml">
+
+            <ui:define name="titulo_pagina">Menu Categoria de Eventos</ui:define>
+
+            <ui:define name="form_manutencao">
+                
+                <h:form></h:form>
+                
+                <h:form id="tabela">
+                    <p:dataTable id="dataTable" var="c" value="#{categoriaDeEventoMB.catEventos}" paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15,20,25">
+                        <f:facet name="header">  
+                            <h:outputText value="Categorias Cadastradas" /> 
+                        </f:facet>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Código da Categoria de Evento" />   
+                            </f:facet>
+                            <p:commandLink value="#{c.codCatEvento}" update=":formulario">
+                                <f:setPropertyActionListener value="#{c}" target="#{categoriaDeEventoMB.catEvento}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Prioridade" />   
+                            </f:facet>   
+                            <p:commandLink value="#{c.prioridade}" update=":formulario">
+                                <f:setPropertyActionListener value="#{c}" target="#{categoriaDeEventoMB.catEvento}"/> 
+                            </p:commandLink>
+                        </p:column>
+                        <p:column >  
+                            <f:facet name="header">
+                                <h:outputText value="Nome" />   
+                            </f:facet>   
+                            <p:commandLink value="#{c.descricao}" update=":formulario">
+                                <f:setPropertyActionListener value="#{c}" target="#{categoriaDeEventoMB.catEvento}"/> 
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <br/>
+                
+                 <h:form id="formulario">
+                    <p:panel id="formPanel" header="Manutenção de Categoria de Evento">
+                        <h:inputHidden value="#{categoriaDeEventoMB.catEvento.codCatEvento}"/>
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Prioridade:*"/>
+                            <p:inputText id="prioridade" value="#{categoriaDeEventoMB.catEvento.prioridade}" validatorMessage="Campo Só Permite Números" required="true" requiredMessage="Campo Obrigatório">
+                                <f:validateRegex for="prioridade" pattern="\d*[0-9](d*[0-9])?"/>
+                            </p:inputText><p:message for="prioridade"/>
+                            <h:outputLabel value="Nome:*"/>
+                            <p:inputText id="nome" maxlength="60" value ="#{categoriaDeEventoMB.catEvento.descricao}" required="true" requiredMessage="Campo Obrigatório"/><p:message for="nome"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Cadastrar" action="#{categoriaDeEventoMB.inserirCategoriaDeEvento()}" update=":formPesquisa, :tabela, formulario"/>
+                        <p:commandButton value="Alterar" action="#{categoriaDeEventoMB.alterarCategoriaDeEvento()}" update=":formPesquisa, :tabela, formulario"/>
+                        <p:commandButton value="Excluir" action="#{categoriaDeEventoMB.excluirCategoriaDeEvento()}" update=":formPesquisa, :tabela, formulario"/><br/><br/>
+                        <b><h:outputText value="#{categoriaDeEventoMB.mensagem}" style="font: bolder"/></b>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+
+                <h:form id="formPesquisa">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Categorias de Evento por Nome">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Nome:*"/>
+                            <p:inputText id="nomePesquisa" style="text-transform: lowercase" value ="#{categoriaDeEventoMB.nome}" required="true" requiredMessage="Campo Obrigatório"/><p:message for="nomePesquisa"/>
+                        </h:panelGrid>
+                        <p:commandButton value="Pesquisar" action="#{categoriaDeEventoMB.pesquisarPorNome()}" update="formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+                <hr></hr>
+                <h:form id="formPesquisaTodos">
+                    <p:panel id="formPanelPesquisa" header="Pesquisar Todas as Categorias de Evento">
+                        <p:commandButton value="Pesquisar Todas" action="#{categoriaDeEventoMB.pesquisar()}" update=":formPesquisa, :tabela, :formulario"/>
+                    </p:panel>
+                </h:form>
+                          
+
+            </ui:define>
+
+
+        </ui:composition>
+
+    </h:body>
+</html>
+
